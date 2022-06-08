@@ -51,7 +51,7 @@ bindsym XF86AudioPrev exec playerctl previous
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec hyper 
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -230,7 +230,7 @@ bar {
 # Start applications
 exec firefox
 exec thunderbird
-exec compton
+exec_always picom --experimental-backend
 exec_always feh --bg-scale /home/tom/Pictures/wallpaper.jpg
 
 # laptop + monitor

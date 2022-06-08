@@ -114,11 +114,11 @@
     blueman
     vscode
     git
-    mailspring
     lxappearance
     spotify
     rofi
-    compton
+    picom
+    hyper
   ];
 
 
