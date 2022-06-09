@@ -119,6 +119,7 @@
     rofi
     picom
     hyper
+    papirus-icon-theme
   ];
 
 
