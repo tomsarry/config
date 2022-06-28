@@ -11,7 +11,6 @@ general {
 order += "cpu_usage"
 order += "memory"
 order += "disk /"
-order += "cpu_temperature 0"
 order += "battery all"
 order += "wireless wlp60s0"
 order += "tztime local"
@@ -39,11 +38,6 @@ battery all {
   threshold_type=percentage
   low_threshold=10
   integer_battery_capacity = true
-}
-
-cpu_temperature 0 {
-  format = " %degrees °C"
-  max_threshold = 42
 }
 
 memory {
