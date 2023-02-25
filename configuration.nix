@@ -27,8 +27,6 @@
   # replicates the default behaviour.
   networking.useDHCP = false;
   networking.interfaces.wlp60s0.useDHCP = true;
-  networking.interfaces.enp0s25.useDHCP = true;
-  networking.interfaces.wlp2s0.useDHCP = true;
   networking.networkmanager.enable = true;
 
   # Configure network proxy if necessary
@@ -42,45 +40,19 @@
     keyMap = "us";
   };
 
-  fonts.fontDir.enable = true;
+  # fonts.fontDir.enable = true;
 
   
 
   # environment.pathsToLink = [ "/libexec" ];
 
-
-  services = {
-    xserver = {
-      enable = true;
-      
-      windowManager.i3 = {
-        enable = true;
-        package = pkgs.i3-gaps;
-      };
-
-      desktopManager = {
-        xterm.enable = false;
-        xfce = {
-          enable = true;
-          noDesktop = true;
-          enableXfwm = false;
-        };
-      };
-
-      displayManager = {
-        defaultSession = "xfce+i3";
-      };
-
-      resolutions = [{
-        x = 1920;
-        y = 1080;
-      }];
-    };
-  };
+  services.xserver.enable = true;
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
-  # services.xserver.layout = "us";
-  # services.xserver.xkbOptions = "eurosign:e";
+  services.xserver.layout = "us";
+  services.xserver.xkbOptions = "eurosign:e";
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -114,13 +86,75 @@
     blueman
     vscode
     git
-    lxappearance
-    spotify
-    rofi
-    picom
-    hyper
-    papirus-icon-theme
+    zoom-us
+    texlive.combined.scheme-full
+    gcc
+    python3
+    gnumake
+    docker
+    libsForQt5.qtstyleplugin-kvantum
+    kitty
+    
+    libsecret
+    gnome.gnome-keyring
+    gnome.gnome-tweaks
+    discord
+    
+    imagemagick
+    lutris
+    obs-studio
+    evince
+    vlc
+    xclip
+ 
+    # bitcoin
+    autoconf
+    clang
+    libtool
+    automake
+    pkg-config
+    boost
+    libevent
+    glibc
+    gdb
+  
+    libpqxx
+    
+    calibre
   ];
+  
+  environment.sessionVariables = rec {
+    XDG_CACHE_HOME  = "\${HOME}/.cache";
+    XDG_CONFIG_HOME = "\${HOME}/.config";
+    XDG_BIN_HOME    = "\${HOME}/.local/bin";
+    XDG_DATA_HOME   = "\${HOME}/.local/share";
+
+    # LIBTOOLIZE = "libtoolize";
+    # NIX_BOOST_LIB_DIR = "${pkgs.boost}/lib";
+
+    # Steam needs this to find Proton-GE
+    STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
+    # note: this doesn't replace PATH, it just adds this to it
+    PATH = [ 
+      "\${XDG_BIN_HOME}"
+    ];
+  };
+  virtualisation.docker.enable = true;
+
+  security.polkit.enable = true;
+  security.polkit = { 
+    extraConfig =  ''
+      polkit.addRule(function(action, subject) {
+        if (action.id === "org.freedesktop.NetworkManager.settings.modify.system") {
+	  var name = polkit.spawn(["cat", "/proc/" + subject.pid + "/comm"]);
+	  if (name.includes("steam")) {
+            polkit.log("ignoring steam NM prompt");
+            return polkit.Result.NO;
+          }
+        }
+      });
+    '';
+  };
 
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -153,7 +187,9 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "21.11"; # Did you read the comment?
+  system.stateVersion = "22.11"; # Did you read the comment?
 
+  system.autoUpgrade.enable = true;
+  system.autoUpgrade.allowReboot = true;
 }
 
